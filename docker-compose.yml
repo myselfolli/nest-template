@@ -1,0 +1,75 @@
+name: 'stock-chef'
+services:
+  api:
+    environment:
+      - NODE_ENV=local
+    build:
+      context: .
+      dockerfile: ./apps/api/Dockerfile
+      target: local
+    command: npm run start:dev api
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    volumes:
+      - .:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
+    ports:
+      - '5050:3000'
+      - '9229:9229'
+
+  auth:
+    environment:
+      - NODE_ENV=local
+    build:
+      context: .
+      dockerfile: ./apps/auth/Dockerfile
+      target: local
+    command: npm run start:dev auth
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    volumes:
+      - .:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    ports:
+      - '15672:15672'
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RMQ_PASS}
+    healthcheck:
+      test: ['CMD', 'rabbitmq-diagnostics', '-q', 'check_running']  
+      interval: 5s
+      timeout: 30s
+      retries: 5
+
+  postgres:
+    image: timescale/timescaledb:latest-pg16
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASS}
+      PGUSER: postgres
+      TZ: UTC
+      PGTZ: UTC
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  node_modules:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/node_modules
