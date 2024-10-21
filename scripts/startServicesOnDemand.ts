@@ -1,8 +1,18 @@
 import axios from 'axios';
 import { execSync } from 'child_process';
+import * as http from 'http';
+import * as https from 'https';
+
+const httpAgent = new http.Agent({ keepAlive: true });
+const httpsAgent = new https.Agent({ keepAlive: true });
+
+const axiosInstance = axios.create({
+  httpAgent,
+  httpsAgent,
+});
 
 async function getAllQueuesWithOpenMessages(): Promise<string[]> {
-  const response = await axios.get('http://localhost:15672/api/queues', {
+  const response = await axiosInstance.get('http://localhost:15672/api/queues', {
     auth: {
       username: 'rabbitmq',
       password: 'rabbitmq',
@@ -14,7 +24,7 @@ async function getAllQueuesWithOpenMessages(): Promise<string[]> {
 }
 
 async function getMessagesOfQueue(queueName: string): Promise<string[]> {
-  const response = await axios.post(
+  const response = await axiosInstance.post(
     `http://localhost:15672/api/queues/%2F/${queueName}/get`,
     {
       count: 100,

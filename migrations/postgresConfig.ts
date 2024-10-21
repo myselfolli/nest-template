@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm';
 import * as dotenv from 'dotenv';
 import * as Entities from '../libs/database/src/entities';
-import fs from 'fs';
+import * as fs from 'fs';
 
 const getConfig = async (): Promise<DataSource> => {
   console.debug(process.cwd());

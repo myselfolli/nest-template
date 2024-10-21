@@ -19,6 +19,7 @@ async function bootstrap(): Promise<void> {
     .setDescription('The API description')
     .setVersion('1.0')
     .addBearerAuth()
+    .addServer('http://localhost:5050', 'Local Development server')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);

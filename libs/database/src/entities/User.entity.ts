@@ -21,11 +21,23 @@ export class User {
   password: string;
 
   @CreateDateColumn()
+  @ApiProperty({
+    description: 'The date and time the user was created',
+    example: '2021-01-01T00:00:00.000Z',
+  })
   createdAt: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date | null;
+  @ApiProperty({
+    description: 'The date and time the user was last updated',
+    example: '2021-01-01T00:00:00.000Z',
+  })
+  updatedAt: Date;
 
   @DeleteDateColumn()
+  @ApiProperty({
+    description: 'The date and time the user was deleted',
+    example: 'null',
+  })
   deletedAt: Date | null;
 }

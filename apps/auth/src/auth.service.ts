@@ -1,5 +1,5 @@
-import bcrypt from 'bcryptjs';
-import jsonwebtoken from 'jsonwebtoken';
+import * as bcrypt from 'bcryptjs';
+import * as jsonwebtoken from 'jsonwebtoken';
 
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
