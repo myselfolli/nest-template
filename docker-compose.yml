@@ -1,11 +1,12 @@
-name: 'stock-chef'
 services:
   api:
     environment:
       - NODE_ENV=local
     build:
+      args:
+        - APP_NAME=api
       context: .
-      dockerfile: ./apps/api/Dockerfile
+      dockerfile: ./Dockerfile
       target: local
     command: npm run start:dev api
     depends_on:
@@ -22,8 +23,10 @@ services:
     environment:
       - NODE_ENV=local
     build:
+      args:
+          - APP_NAME=auth
       context: .
-      dockerfile: ./apps/auth/Dockerfile
+      dockerfile: ./Dockerfile
       target: local
     command: npm run start:dev auth
     depends_on:

@@ -1,7 +1,7 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservices';
-import Joi from 'joi';
+import * as Joi from 'joi';
 import { RmqService } from './microServices';
 
 @Module({
